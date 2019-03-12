@@ -5,8 +5,6 @@ import './app.css';
 
 class HomeLayout extends Component {
 
-    
-
     private renderBoard(): JSX.Element {
         return (
             <div className="HomeLayout__boardWrapper">

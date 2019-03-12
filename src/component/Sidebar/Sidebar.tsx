@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { RouteList, IRoute } from '../RouteList/RouteList';
+import { searchAddress } from '../../util/map.client';
 
 class IRouteLocation {
     lat: string;
@@ -30,7 +31,7 @@ export default class Sidebar extends Component<ISidebarProps, ISidebarState> {
         super(props);
         this.state = {
             routes: this.props.routes || initialRoutes,
-            searchValue: ''
+            searchValue: 'Баксан, Тамбиева 207'
         };
     }
 
@@ -38,16 +39,26 @@ export default class Sidebar extends Component<ISidebarProps, ISidebarState> {
 
     }
 
-    private locationSearch(event: React.FormEvent<HTMLInputElement>) {
+    private onLocationChange(event: React.FormEvent<HTMLInputElement>) {
         const safeSearchingLocation: string = event.currentTarget.value;
         this.setState({
             searchValue: safeSearchingLocation
         });
     }
 
+    private async searchLocation() {
+        const address = this.state.searchValue;
+        try {
+            let route = await searchAddress(address);
+            console.log(route);
+        } catch(e) {
+            console.log(e);
+        }
+    }
+
     handleKeyPress(event: React.KeyboardEvent<HTMLInputElement>) {
         if (event.key === 'Enter') {
-            const address = this.state.searchValue;
+           this.searchLocation();
         }
     }
 
@@ -58,7 +69,7 @@ export default class Sidebar extends Component<ISidebarProps, ISidebarState> {
                 <div className="ui-sidebar__wrapper">
                     <div className="ui-sidebar__header">
                         <h2>Route Details</h2>
-                        <input type="text" onChange={e => this.locationSearch(e) } value={searchValue} onKeyPress={ e => this.handleKeyPress(e) }/>
+                        <input type="text" onChange={e => this.onLocationChange(e) } value={searchValue} onKeyPress={ e => this.handleKeyPress(e) }/>
                         <RouteList routes={routes} onRouteMixed={this.routeListMixed.bind(this)}/>
                     </div>
                     <div className="ui-sidebar__body">
