@@ -1,4 +1,4 @@
-import { IPlace } from "../../component/RouteList/RouteList";
+import { IPlace } from "../../types";
 
 export const APPEND_NEW_PLACE: string = '@@map/APPEND_NEW_PLACE';
 

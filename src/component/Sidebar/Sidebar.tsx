@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import Redux from 'redux';
-import { PlaceList, IPlace } from '../RouteList/RouteList';
+import PlaceList from '../PlaceList';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/store';
 import { IMapActions, appendNewPlaceActon } from '../../store/map/map.actions';
+import { searchAddress } from '../../util/map.client';
+import { IPlace } from '../../types';
 
 interface ISidebarProps {
     places: IPlace[]
@@ -25,16 +27,30 @@ class Sidebar extends Component<ISidebarProps & ISidebarDispatchProps, ISidebarS
         };
     }
 
-    private locationSearch(event: React.FormEvent<HTMLInputElement>) {
+    private onLtInputChanged(event: React.FormEvent<HTMLInputElement>) {
         const safeSearchingLocation: string = event.currentTarget.value;
         this.setState({
             searchValue: safeSearchingLocation
         });
     }
 
+    private async searchLocation() {
+        const address = this.state.searchValue;
+        try {
+            let response = await searchAddress(address);
+            let newPlace: IPlace = {
+                name: response.formattedAddress,
+                location: response.location
+            }
+            this.props.appendPlace(newPlace);
+        } catch(e) {
+            console.log(e);
+        }
+    }
+
     handleKeyPress(event: React.KeyboardEvent<HTMLInputElement>) {
         if (event.key === 'Enter') {
-            const address = this.state.searchValue;
+           this.searchLocation();
         }
     }
 
@@ -46,7 +62,7 @@ class Sidebar extends Component<ISidebarProps & ISidebarDispatchProps, ISidebarS
                 <div className="ui-sidebar__wrapper">
                     <div className="ui-sidebar__header">
                         <h2>Route Details</h2>
-                        <input type="text" onChange={e => this.locationSearch(e) } value={searchValue} onKeyPress={ e => this.handleKeyPress(e) }/>
+                        <input type="text" onChange={e => this.onLtInputChanged(e) } value={searchValue} onKeyPress={ e => this.handleKeyPress(e) }/>
                         <PlaceList places={places} />
                     </div>
                     <div className="ui-sidebar__body">

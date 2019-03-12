@@ -1,5 +1,5 @@
 import { action, ActionType } from 'typesafe-actions';
-import { IPlace } from '../../component/RouteList/RouteList';
+import { IPlace } from '../../types';
 import { APPEND_NEW_PLACE, REMOVE_PLACE_FROM_STACK } from './map.types';
 
 export const appendNewPlaceActon = (place: IPlace) => action(APPEND_NEW_PLACE, {
