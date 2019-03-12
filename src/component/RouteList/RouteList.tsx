@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export interface IRoute {
+export interface IPlace {
     name: string;
     location: {
         lat: string
@@ -10,23 +10,22 @@ export interface IRoute {
     expo?: string
 }
 
-interface IRouteListProps {
-    routes: IRoute[]
+interface IPlacesListProps {
+    places: IPlace[]
     onRouteMixed?: Function
 }
 
-interface IRouteListState extends IRouteListProps {
+interface IPlacesListState extends IPlacesListProps {
     hasListChanged?: boolean
 }
 
 
-export class RouteList extends Component<IRouteListProps, IRouteListState> {
-    state: IRouteListState;
+export class RouteList extends Component<IPlacesListProps, IPlacesListState> {
 
-    constructor(props: IRouteListProps) {
+    constructor(props: IPlacesListProps) {
         super(props);
         this.state = {
-            routes: this.props.routes
+            places: this.props.places
         };
 
         if (this.props.onRouteMixed) {
@@ -35,15 +34,15 @@ export class RouteList extends Component<IRouteListProps, IRouteListState> {
     }
 
     render() {
-        const { routes } = this.state;
+        const { places } = this.state;
         return (
             <div className="ui-route-list">
                 <div className="ui-route-list__wrapper">
                     {
-                        routes.map((route, index) => {
+                        places.map((place, index) => {
                             return (
                                 <div key={index} title={`Точка маршрута ${index + 1}`}>
-
+                                
                                 </div>
                             )
                         })

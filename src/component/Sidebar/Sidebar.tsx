@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { RouteList, IRoute } from '../RouteList/RouteList';
+import { RouteList, IPlace } from '../RouteList/RouteList';
 
 class IRouteLocation {
     lat: string;
@@ -10,17 +10,17 @@ class IRouteLocation {
     }
 }
 
-const initialRoutes: IRoute[] = [{
+const initialPlaces: IPlace[] = [{
     name: 'улица проспект Ленина, 59, Нальчик, Кабардино-Балкарская Республика',
     location: new IRouteLocation('43.486987', '43.609875')
 }]
 
 interface ISidebarProps {
-    routes?: IRoute[]
+    places?: IPlace[]
 }
 
 interface ISidebarState {
-    routes: IRoute[]
+    places: IPlace[]
     searchValue: string
 }
 
@@ -29,7 +29,7 @@ export default class Sidebar extends Component<ISidebarProps, ISidebarState> {
     constructor(props: ISidebarProps) {
         super(props);
         this.state = {
-            routes: this.props.routes || initialRoutes,
+            places: this.props.places || initialPlaces,
             searchValue: ''
         };
     }
@@ -52,14 +52,14 @@ export default class Sidebar extends Component<ISidebarProps, ISidebarState> {
     }
 
     render() {
-        const { routes, searchValue } = this.state;
+        const { places: routes, searchValue } = this.state;
         return (
             <div className="ui-sidebar">
                 <div className="ui-sidebar__wrapper">
                     <div className="ui-sidebar__header">
                         <h2>Route Details</h2>
                         <input type="text" onChange={e => this.locationSearch(e) } value={searchValue} onKeyPress={ e => this.handleKeyPress(e) }/>
-                        <RouteList routes={routes} onRouteMixed={this.routeListMixed.bind(this)}/>
+                        <RouteList places={routes} onRouteMixed={this.routeListMixed.bind(this)}/>
                     </div>
                     <div className="ui-sidebar__body">
 
