@@ -1,20 +1,6 @@
 import React, { Component } from 'react';
 import { RouteList, IPlace } from '../RouteList/RouteList';
 
-class IRouteLocation {
-    lat: string;
-    lng: string;
-    constructor(lat: string, lng: string) {
-        this.lat = lat;
-        this.lng = lng
-    }
-}
-
-const initialPlaces: IPlace[] = [{
-    name: 'улица проспект Ленина, 59, Нальчик, Кабардино-Балкарская Республика',
-    location: new IRouteLocation('43.486987', '43.609875')
-}]
-
 interface ISidebarProps {
     places?: IPlace[]
 }
@@ -29,7 +15,7 @@ export default class Sidebar extends Component<ISidebarProps, ISidebarState> {
     constructor(props: ISidebarProps) {
         super(props);
         this.state = {
-            places: this.props.places || initialPlaces,
+            places: this.props.places || [],
             searchValue: ''
         };
     }

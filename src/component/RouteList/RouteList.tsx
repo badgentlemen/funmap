@@ -3,11 +3,11 @@ import React, { Component } from 'react';
 export interface IPlace {
     name: string;
     location: {
-        lat: string
-        lng: string
-    }
-    description?: string
-    expo?: string
+        lat: number
+        lng: number
+    };
+    description?: string;
+    expo?: string;
 }
 
 interface IPlacesListProps {
@@ -42,7 +42,7 @@ export class RouteList extends Component<IPlacesListProps, IPlacesListState> {
                         places.map((place, index) => {
                             return (
                                 <div key={index} title={`Точка маршрута ${index + 1}`}>
-                                
+
                                 </div>
                             )
                         })
