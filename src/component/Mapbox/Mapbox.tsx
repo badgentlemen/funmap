@@ -1,6 +1,6 @@
 import React, { Component, createRef } from 'react';
 import 'googlemaps';
-import { initialPosition } from '../../util/map.client';
+import { initialPosition, directionBetweenRoutes } from '../../util/map.client';
 import { IRoute } from '../RouteList/RouteList';
 
 const GROUTES: IRoute[] = [
@@ -34,7 +34,8 @@ export default class MapBox extends Component<IMapBoxProps, IMapBoxState> {
     private mapRef = createRef<HTMLDivElement>();
     private mapKit: typeof google | null = null;
     private map: google.maps.Map | null = null;
-    private markers: google.maps.Marker[] = []
+    private markers: google.maps.Marker[] = [];
+    private directionsDisplay = new google.maps.DirectionsRenderer()
     constructor(props: IMapBoxProps) {
         super(props);
         this.state = {
@@ -93,6 +94,8 @@ export default class MapBox extends Component<IMapBoxProps, IMapBoxState> {
     }
 
     private afterMapInitialized(): void {
+        this.map && this.directionsDisplay.setMap(this.map);
+
         const { routes } = this.state;
         this.setRoutes(routes);
     }
@@ -129,10 +132,23 @@ export default class MapBox extends Component<IMapBoxProps, IMapBoxState> {
         this.markers.forEach(marker => {
             this.addPlaceMarker(marker);
         });
+
+        this.updateDirections();
     }
 
     addPlaceMarker(marker: google.maps.Marker): void {
         this.map && marker.setMap(this.map);
+    }
+
+    async updateDirections(): Promise<void> {
+        try {
+            const { routes } = this.state;
+            console.log(routes)
+            let directions = await directionBetweenRoutes(routes);
+            this.directionsDisplay.setDirections(directions);
+        } catch(error) {
+            // console.log(error);
+        }
     }
 
     render() {

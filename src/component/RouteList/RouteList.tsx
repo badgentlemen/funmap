@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
+import 'googlemaps';
 
-export interface IRoute {
+export interface IRoute extends google.maps.Place {
     name: string;
-    location: {
-        lat: number
-        lng: number
-    }
+    location: google.maps.LatLng|google.maps.LatLngLiteral;
     description?: string
     expo?: string
 }
