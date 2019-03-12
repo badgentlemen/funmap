@@ -2,19 +2,7 @@ import React, { Component } from 'react';
 import { RouteList, IRoute } from '../RouteList/RouteList';
 import { searchAddress } from '../../util/map.client';
 
-class IRouteLocation {
-    lat: string;
-    lng: string;
-    constructor(lat: string, lng: string) {
-        this.lat = lat;
-        this.lng = lng
-    }
-}
-
-const initialRoutes: IRoute[] = [{
-    name: 'улица проспект Ленина, 59, Нальчик, Кабардино-Балкарская Республика',
-    location: new IRouteLocation('43.486987', '43.609875')
-}]
+const initialRoutes: IRoute[] = [];
 
 interface ISidebarProps {
     routes?: IRoute[]
@@ -26,11 +14,13 @@ interface ISidebarState {
 }
 
 export default class Sidebar extends Component<ISidebarProps, ISidebarState> {
-    
+    routes: IRoute[] = []
     constructor(props: ISidebarProps) {
         super(props);
+        this.routes = this.props.routes || initialRoutes
+
         this.state = {
-            routes: this.props.routes || initialRoutes,
+            routes: this.routes,
             searchValue: 'Баксан, Тамбиева 207'
         };
     }
@@ -49,8 +39,15 @@ export default class Sidebar extends Component<ISidebarProps, ISidebarState> {
     private async searchLocation() {
         const address = this.state.searchValue;
         try {
-            let route = await searchAddress(address);
-            console.log(route);
+            let response = await searchAddress(address);
+            let route: IRoute = {
+                name: response.formattedAddress,
+                location: response.location
+            }
+            this.routes.push(route);
+            this.setState({
+                routes: this.routes
+            });
         } catch(e) {
             console.log(e);
         }

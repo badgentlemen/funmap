@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 export interface IRoute {
     name: string;
     location: {
-        lat: string
-        lng: string
+        lat: number
+        lng: number
     }
     description?: string
     expo?: string
