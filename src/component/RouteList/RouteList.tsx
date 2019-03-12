@@ -20,7 +20,7 @@ interface IPlacesListState extends IPlacesListProps {
 }
 
 
-export class RouteList extends Component<IPlacesListProps, IPlacesListState> {
+export class PlaceList extends Component<IPlacesListProps, IPlacesListState> {
 
     constructor(props: IPlacesListProps) {
         super(props);

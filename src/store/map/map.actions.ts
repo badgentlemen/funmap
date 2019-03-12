@@ -7,7 +7,7 @@ export const appendNewPlaceActon = (place: IPlace) => action(APPEND_NEW_PLACE, {
 });
 
 export const removePlaceFrowStack = (place: IPlace) => action(REMOVE_PLACE_FROM_STACK, {
-    place
+    id: 273
 });
 
 const actions = {

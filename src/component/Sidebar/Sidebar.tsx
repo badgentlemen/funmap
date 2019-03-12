@@ -1,27 +1,28 @@
 import React, { Component } from 'react';
-import { RouteList, IPlace } from '../RouteList/RouteList';
+import Redux from 'redux';
+import { PlaceList, IPlace } from '../RouteList/RouteList';
+import { connect } from 'react-redux';
+import { ApplicationState } from '../../store/store';
+import { IMapActions, appendNewPlaceActon } from '../../store/map/map.actions';
 
 interface ISidebarProps {
-    places?: IPlace[]
+    places: IPlace[]
+}
+
+interface ISidebarDispatchProps {
+    appendPlace: (place: IPlace) => void
 }
 
 interface ISidebarState {
-    places: IPlace[]
     searchValue: string
 }
 
-export default class Sidebar extends Component<ISidebarProps, ISidebarState> {
-    
-    constructor(props: ISidebarProps) {
+class Sidebar extends Component<ISidebarProps & ISidebarDispatchProps, ISidebarState> {
+    constructor(props: ISidebarProps & ISidebarDispatchProps) {
         super(props);
         this.state = {
-            places: this.props.places || [],
             searchValue: ''
         };
-    }
-
-    private routeListMixed() {
-
     }
 
     private locationSearch(event: React.FormEvent<HTMLInputElement>) {
@@ -38,14 +39,15 @@ export default class Sidebar extends Component<ISidebarProps, ISidebarState> {
     }
 
     render() {
-        const { places: routes, searchValue } = this.state;
+        const places  = this.props.places || [];
+        const { searchValue } = this.state;
         return (
             <div className="ui-sidebar">
                 <div className="ui-sidebar__wrapper">
                     <div className="ui-sidebar__header">
                         <h2>Route Details</h2>
                         <input type="text" onChange={e => this.locationSearch(e) } value={searchValue} onKeyPress={ e => this.handleKeyPress(e) }/>
-                        <RouteList places={routes} onRouteMixed={this.routeListMixed.bind(this)}/>
+                        <PlaceList places={places} />
                     </div>
                     <div className="ui-sidebar__body">
 
@@ -55,3 +57,13 @@ export default class Sidebar extends Component<ISidebarProps, ISidebarState> {
         )
     }
 }
+
+const mapStateToProps = (state: ApplicationState): ISidebarProps => ({
+    places: state.map.places
+})
+
+const mapDispatchToProps = (dispatch: Redux.Dispatch<IMapActions>): ISidebarDispatchProps => ({
+    appendPlace: (place) => dispatch(appendNewPlaceActon(place))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);
