@@ -1,33 +1,17 @@
 import React, { Component, createRef } from 'react';
 import 'googlemaps';
 import { initialPosition, directionBetweenRoutes } from '../../util/map.client';
-import { IRoute } from '../RouteList/RouteList';
-
-const GROUTES: IRoute[] = [
-    {
-      "name": "ул. Тамбиева, Дугулубгей, Кабардино-Балкарская Респ., Россия",
-      "location": {
-        "lat": 43.6626738,
-        "lng": 43.52794080000001
-      }
-    },
-    {
-      "name": "Нальчик, Кабардино-Балкарская Респ., Россия",
-      "location": {
-        "lat": 43.4949918,
-        "lng": 43.60451330000001
-      }
-    }
-  ]
+import { IPlace } from "../../types";
 
 interface IMapBoxProps {
-    initialPosition?: google.maps.LatLngLiteral
+    places: IPlace[];
+    initialPosition?: google.maps.LatLngLiteral;
 }
 
 interface IMapBoxState {
-    routes: IRoute[]
-    mapInitialized: boolean
-    initialPosition: google.maps.LatLngLiteral
+    places: IPlace[];
+    mapInitialized: boolean;
+    initialPosition: google.maps.LatLngLiteral;
 }
 
 export default class MapBox extends Component<IMapBoxProps, IMapBoxState> {
@@ -39,7 +23,7 @@ export default class MapBox extends Component<IMapBoxProps, IMapBoxState> {
     constructor(props: IMapBoxProps) {
         super(props);
         this.state = {
-            routes: GROUTES, 
+            places: [], 
             mapInitialized: false,
             initialPosition: this.props.initialPosition || initialPosition
         }
@@ -56,6 +40,14 @@ export default class MapBox extends Component<IMapBoxProps, IMapBoxState> {
                 this.map.panTo(coordinates);
             }
         })
+    }
+
+    componentWillReceiveProps(props: IMapBoxProps) {
+        console.log(props);
+        if (props.places !== this.state.places) {
+            const places = props.places;
+            this.setPlaces(places);
+        }
     }
 
     private initMap() {
@@ -95,9 +87,14 @@ export default class MapBox extends Component<IMapBoxProps, IMapBoxState> {
 
     private afterMapInitialized(): void {
         this.map && this.directionsDisplay.setMap(this.map);
+        
+        this.directionsDisplay.setRouteIndex(0);
+        this.directionsDisplay.setOptions({
+            suppressMarkers: true
+        })
 
-        const { routes } = this.state;
-        this.setRoutes(routes);
+        const { places } = this.state;
+        this.setPlaces(places);
     }
 
     getBounds() {
@@ -118,12 +115,16 @@ export default class MapBox extends Component<IMapBoxProps, IMapBoxState> {
         this.markers = [];
     }
 
-    setRoutes(routes: IRoute[]): void {
+    setPlaces(places: IPlace[]): void {
         this.clearMapFromMarkers();
-        let markers: google.maps.Marker[] = routes.map(route => {
+        this.updateDirections(places);
+    }
+
+    setMarkersFromPlaces(places: IPlace[]): void {
+        let markers: google.maps.Marker[] = places.map(place => {
 
             const marker = new google.maps.Marker({
-                position: route.location
+                position: place.location
             });
 
             return marker;
@@ -132,19 +133,15 @@ export default class MapBox extends Component<IMapBoxProps, IMapBoxState> {
         this.markers.forEach(marker => {
             this.addPlaceMarker(marker);
         });
-
-        this.updateDirections();
     }
 
     addPlaceMarker(marker: google.maps.Marker): void {
         this.map && marker.setMap(this.map);
     }
 
-    async updateDirections(): Promise<void> {
+    async updateDirections(places: IPlace[]): Promise<void> {
         try {
-            const { routes } = this.state;
-            console.log(routes)
-            let directions = await directionBetweenRoutes(routes);
+            let directions = await directionBetweenRoutes(places);
             this.directionsDisplay.setDirections(directions);
         } catch(error) {
             // console.log(error);

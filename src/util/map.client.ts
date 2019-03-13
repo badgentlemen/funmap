@@ -1,5 +1,5 @@
 import 'googlemaps';
-import { IRoute } from '../component/RouteList/RouteList';
+import { IPlace } from "../types";
 
 const googleInstance = () => {
     try {
@@ -30,16 +30,17 @@ export interface IGoogleSearchResponse {
 }
 
 
-export async function directionBetweenRoutes(routes: IRoute[]): Promise<google.maps.DirectionsResult> {
+export async function directionBetweenRoutes(places: IPlace[]): Promise<google.maps.DirectionsResult> {
     const google = googleInstance();
     const directionService = new google.maps.DirectionsService();
 
     return new Promise((resolve, reject) => {
-        const { 0: origin, [routes.length - 1]: destination } = routes
 
-        if (routes.length) {
+        const { 0: origin, [places.length - 1]: destination } = places
 
-            const poinst: google.maps.DirectionsWaypoint[] = routes.map(route => {
+        if (places.length) {
+
+            const poinst: google.maps.DirectionsWaypoint[] = places.map(route => {
                 const point: google.maps.DirectionsWaypoint = {
                     location: route.location,
                     stopover: true
@@ -54,11 +55,12 @@ export async function directionBetweenRoutes(routes: IRoute[]): Promise<google.m
                 origin: origin.location,
                 destination: origin.location,
                 waypoints: poinst,
-                travelMode: google.maps.TravelMode.DRIVING
+                travelMode: google.maps.TravelMode.DRIVING,
+                provideRouteAlternatives: false
             };
         
             directionService.route(request, (result, status) => {
-                console.log(status);
+                console.log(result);
                 if (status == google.maps.DirectionsStatus.OK) {
                     return resolve(result);
                 } else {
