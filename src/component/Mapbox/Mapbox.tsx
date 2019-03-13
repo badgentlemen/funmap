@@ -23,7 +23,7 @@ export default class MapBox extends Component<IMapBoxProps, IMapBoxState> {
     constructor(props: IMapBoxProps) {
         super(props);
         this.state = {
-            places: [], 
+            places: this.props.places, 
             mapInitialized: false,
             initialPosition: this.props.initialPosition || initialPosition
         }
@@ -43,11 +43,8 @@ export default class MapBox extends Component<IMapBoxProps, IMapBoxState> {
     }
 
     componentWillReceiveProps(props: IMapBoxProps) {
-        console.log(props);
-        if (props.places !== this.state.places) {
-            const places = props.places;
-            this.setPlaces(places);
-        }
+        const places = props.places;
+        this.setPlaces(places);
     }
 
     private initMap() {
@@ -124,7 +121,8 @@ export default class MapBox extends Component<IMapBoxProps, IMapBoxState> {
         let markers: google.maps.Marker[] = places.map(place => {
 
             const marker = new google.maps.Marker({
-                position: place.location
+                position: place.location,
+                draggable: true
             });
 
             return marker;
@@ -142,9 +140,10 @@ export default class MapBox extends Component<IMapBoxProps, IMapBoxState> {
     async updateDirections(places: IPlace[]): Promise<void> {
         try {
             let directions = await directionBetweenRoutes(places);
+            this.setMarkersFromPlaces(places);
             this.directionsDisplay.setDirections(directions);
         } catch(error) {
-            // console.log(error);
+            
         }
     }
 

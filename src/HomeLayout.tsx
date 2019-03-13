@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import MapBox from './component/Mapbox';
 import Sidebar from './component/Sidebar';
-import { searchAddress } from './util/map.client';
+import { searchAddress, initialPlaces } from './util/map.client';
 import { IPlace } from './types';
 import './app.css';
 
@@ -15,7 +15,7 @@ class HomeLayout extends Component<{}, IHomeLayoutState> {
     constructor(props: {}) {
         super(props);
         this.state = {
-            places: []
+            places: initialPlaces
         }
     }
 
@@ -36,7 +36,7 @@ class HomeLayout extends Component<{}, IHomeLayoutState> {
             } 
 
         } catch(e) {
-            console.log(e);
+            
         }
     }
 
