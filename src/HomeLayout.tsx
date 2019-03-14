@@ -52,11 +52,23 @@ class HomeLayout extends Component<{}, IHomeLayoutState> {
         });
     }
 
+    private mixePlaces(origin: number, destination: number): void {
+        if (origin !== destination) {
+            const places = this.state.places;
+            const draggedPlace = places[origin];
+            places.splice(origin, 1);
+            places.splice(destination, 0, draggedPlace);
+            this.setState({
+                places
+            });
+        }
+    }
+
     private renderBoard(): JSX.Element {
         return (
             <div className="HomeLayout__boardWrapper">
                 <Sidebar searchAddress={value => this.searchLocation(value)} 
-                places={this.state.places} deletePlace={place => this.onDeletePlace(place)}/>
+                places={this.state.places} deletePlace={place => this.onDeletePlace(place)} mixePlace={this.mixePlaces.bind(this)}/>
             </div>
         )
     }

@@ -32,7 +32,7 @@ body {
     left: 0px;
     z-index: 300;
     transition: width 0.25s ease-in-out 0s;
-    min-width: 280px;
+    width: 280px;
     background-color: black;
     color: white;
 }
@@ -54,6 +54,25 @@ body {
     display: flex;
     flex-direction: column;
     padding: 30px 40px;
+}
+
+.ui-route-list {
+    position: relative;
+    list-style: none;
+    padding: 0;
+}
+
+.ui-route-list__item {
+    position: relative;
+    padding: 8px 0;
+    cursor: grabbing;
+}
+
+.ui-route-list__item .delete-icon {
+    cursor: pointer;
+    position: absolute;
+    right: -8px;
+    bottom: 40%;
 }
 
 .ui-map-box,

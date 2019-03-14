@@ -113,11 +113,11 @@ export default class MapBox extends Component<IMapBoxProps, IMapBoxState> {
     }
 
     setPlaces(places: IPlace[]): void {
-        this.clearMapFromMarkers();
         this.updateDirections(places);
     }
 
     setMarkersFromPlaces(places: IPlace[]): void {
+        this.clearMapFromMarkers();
         let markers: google.maps.Marker[] = places.map(place => {
 
             const marker = new google.maps.Marker({
